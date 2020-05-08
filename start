@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+from picroscope import App
+
+import os
+
+os.putenv('DISPLAY', ':0.0')
+
+App()
