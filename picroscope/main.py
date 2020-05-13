@@ -162,7 +162,7 @@ class CameraSave(ui.Button):
     text = "Save"
 
     def action(self):
-        print("CLEEEEK")
+        self.app.cam.save()
 
 class CameraBack(ui.Button):
     x, y, w, h = (684, 84, 110, 48)

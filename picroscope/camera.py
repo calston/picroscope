@@ -1,4 +1,5 @@
 import picamera
+import os
 
 class Camera:
     def __init__(self):
@@ -39,3 +40,15 @@ class Camera:
             if self.zoom_val < 0.03:
                 self.zoom_val = 0.03
             self.set_zoom()
+
+    def save(self, path=os.path.expanduser('~/Pictures')):
+        image_numbers = [int(i.split('.')[0].split('_')[-1])
+            for i in os.listdir(path) if i.startswith('IMG_')]
+
+        if not image_numbers:
+            image_numbers = [0]
+
+        next_image = max(image_numbers) + 1
+
+        file_name = "IMG_%04d.png" % next_image
+        self.camera.capture(os.path.join(path, file_name))
