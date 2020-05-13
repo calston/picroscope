@@ -26,10 +26,15 @@ class Group(Widget):
         surface.blit(text, (self.x + margin + 4, self.y))
 
 class Button(Widget):
-    def __init__(self, font):
+    def __init__(self, app, font):
+        self.app = app
         self.font = font
+        self.fill = (64, 64, 64)
 
     def draw(self, surface):
+        pygame.draw.rect(surface, pygame.Color(*self.fill),
+            (self.x, self.y, self.w, self.h))
+
         pygame.draw.rect(surface, pygame.Color(255, 255,255),
             (self.x, self.y, self.w, self.h), 2)
 
@@ -40,7 +45,7 @@ class Button(Widget):
         surface.blit(text, (self.x+((self.w/2) - (tw/2)), self.y+((self.h/2) - (th/2))))
 
     def inside(self, x, y):
-        inx = (x > self.x) and (y < (self.x+self.w))
+        inx = (x > self.x) and (x < (self.x+self.w))
         iny = (y > self.y) and (y < (self.y+self.h))
 
         if inx and iny:
