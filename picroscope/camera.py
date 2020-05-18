@@ -51,4 +51,4 @@ class Camera:
         next_image = max(image_numbers) + 1
 
         file_name = "IMG_%04d.png" % next_image
-        self.camera.capture(os.path.join(path, file_name))
+        self.camera.capture(os.path.join(path, file_name), use_video_port=True)

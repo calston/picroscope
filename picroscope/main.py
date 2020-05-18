@@ -8,9 +8,11 @@ from pygame.locals import *
 
 from . import ui, camera, lamp
 
+
 class MenuGroup(ui.Group):
     x, y, w, h = (680, 16, 119, 172)
     text =  "Menu"
+
 
 class MenuZoom(ui.Button):
     x, y, w, h = (684, 32, 110, 48)
@@ -18,11 +20,13 @@ class MenuZoom(ui.Button):
     def action(self):
         self.app.widget = 'zoom'
 
+
 class MenuLamp(ui.Button):
     x, y, w, h = (684, 84, 110, 48)
     text = "Lamp"
     def action(self):
         self.app.widget = 'lamp'
+
 
 class MenuCamera(ui.Button):
     x, y, w, h = (684, 136, 110, 48)
@@ -30,9 +34,11 @@ class MenuCamera(ui.Button):
     def action(self):
         self.app.widget = 'camera'
 
+
 class ZoomGroup(ui.Group):
     x, y, w, h = (680, 16, 119, 172)
     text =  "Zoom"
+
 
 class ZoomIn(ui.Button):
     x, y, w, h = (684, 32, 110, 48)
@@ -41,12 +47,14 @@ class ZoomIn(ui.Button):
     def action(self):
         self.app.cam.zoom_in(0.05)
 
+
 class ZoomOut(ui.Button):
     x, y, w, h = (684, 84, 110, 48)
     text = "-"
 
     def action(self):
         self.app.cam.zoom_out(0.05)
+
 
 class ZoomBack(ui.Button):
     x, y, w, h = (684, 136, 110, 48)
@@ -55,9 +63,11 @@ class ZoomBack(ui.Button):
     def action(self):
         self.app.widget = 'menu'
 
+
 class LampGroup(ui.Group):
-    x, y, w, h = (680, 16, 119, 330)
+    x, y, w, h = (680, 16, 119, 380)
     text =  "Lamp"
+
 
 class LampOn(ui.Button):
     x, y, w, h = (684, 32, 110, 48)
@@ -66,6 +76,7 @@ class LampOn(ui.Button):
     def action(self):
         self.app.lamp.on()
 
+
 class LampOff(ui.Button):
     x, y, w, h = (684, 84, 110, 48)
     text = "Off"
@@ -73,99 +84,235 @@ class LampOff(ui.Button):
     def action(self):
         self.app.lamp.off()
 
-class LampBrightDown(ui.Button):
-    x, y, w, h = (684, 136, 48, 48)
-    text = "-"
+
+class LampBright(ui.Value):
+    x, y, w, h = (684, 136, 110, 48)
+    button_w = 32
+    text = "L"
 
     def action(self):
-        brightness = self.app.lamp.brightness
-        if brightness > 10:
-            self.app.lamp.setBrightness(brightness - 10)
+        if self.button == 0:
+            if self.value > 10:
+                self.value -= 10
+        else:
+            if self.value < 100:
+                self.value += 10
 
-class LampBrightUp(ui.Button):
-    x, y, w, h = (745, 136, 48, 48)
-    text = "+"
+        self.app.lamp.setBrightness(self.value)
+
+class LampR(ui.Value):
+    x, y, w, h = (684, 188, 110, 48)
+    button_w = 32
+    text = "R"
+
+    def __init__(self, *a, **kw):
+        ui.Value.__init__(self, *a, **kw)
+        self.fill = (self.value, 0, 0)
 
     def action(self):
-        brightness = self.app.lamp.brightness
-        if brightness <= 90:
-            self.app.lamp.setBrightness(brightness + 10)
+        if self.button == 1:
+            if self.value < 254:
+                self.value += 10
+        else:
+            if self.value > 10:
+                self.value -= 10
 
-class LampRInc(ui.Button):
-    x, y, w, h = (684, 188, 32, 48)
-    text = "^"
-    def action(self):
-        if self.app.lamp_color[0] < 244:
-            self.app.lamp_color[0] += 10
+        self.app.lamp_color[0] = self.value
 
         self.fill = (self.app.lamp_color[0], 0, 0)
         self.app.lamp.fill(*self.app.lamp_color)
 
-class LampGInc(ui.Button):
-    x, y, w, h = (722, 188, 32, 48)
-    text = "^"
+
+class LampG(ui.Value):
+    x, y, w, h = (684, 240, 110, 48)
+    button_w = 32
+    text = "G"
+
+    def __init__(self, *a, **kw):
+        ui.Value.__init__(self, *a, **kw)
+        self.fill = (0, self.value, 0)
+
     def action(self):
-        if self.app.lamp_color[1] < 244:
-            self.app.lamp_color[1] += 10
+        if self.button == 1:
+            if self.value < 254:
+                self.value += 10
+        else:
+            if self.value > 10:
+                self.value -= 10
+
+        self.app.lamp_color[1] = self.value
         self.fill = (0, self.app.lamp_color[1], 0)
         self.app.lamp.fill(*self.app.lamp_color)
 
-class LampBInc(ui.Button):
-    x, y, w, h = (760, 188, 32, 48)
-    text = "^"
+
+class LampB(ui.Value):
+    x, y, w, h = (684, 292, 110, 48)
+    button_w = 32
+    text = "B"
+
+    def __init__(self, *a, **kw):
+        ui.Value.__init__(self, *a, **kw)
+        self.fill = (0, 0, self.value)
+
     def action(self):
-        if self.app.lamp_color[2] < 244:
-            self.app.lamp_color[2] += 10
+        if self.button == 1:
+            if self.value < 254:
+                self.value += 10
+        else:
+            if self.value > 10:
+                self.value -= 10
+
+        self.app.lamp_color[2] = self.value
         self.fill = (0, 0, self.app.lamp_color[2])
         self.app.lamp.fill(*self.app.lamp_color)
 
-class LampRDec(ui.Button):
-    x, y, w, h = (684, 240, 32, 48)
-    text = "v"
-    def action(self):
-        if self.app.lamp_color[0] > 10:
-            self.app.lamp_color[0] -= 10
-        self.fill = (self.app.lamp_color[0], 0, 0)
-        self.app.lamp.fill(*self.app.lamp_color)
-
-class LampGDec(ui.Button):
-    x, y, w, h = (722, 240, 32, 48)
-    text = "v"
-    def action(self):
-        if self.app.lamp_color[1] > 10:
-            self.app.lamp_color[1] -= 10
-        self.fill = (0, self.app.lamp_color[1], 0)
-        self.app.lamp.fill(*self.app.lamp_color)
-
-class LampBDec(ui.Button):
-    x, y, w, h = (760, 240, 32, 48)
-    text = "v"
-    def action(self):
-        if self.app.lamp_color[2] > 10:
-            self.app.lamp_color[2] -= 10
-        self.fill = (0, 0, self.app.lamp_color[2])
-        self.app.lamp.fill(*self.app.lamp_color)
 
 class LampBack(ui.Button):
-    x, y, w, h = (684, 292, 110, 48)
+    x, y, w, h = (684, 344, 110, 48)
     text = "Back"
 
     def action(self):
         self.app.widget = 'menu'
 
+
 class CameraGroup(ui.Group):
-    x, y, w, h = (680, 16, 119, 120)
+    x, y, w, h = (680, 16, 119, 380)
     text =  "Camera"
 
-class CameraSave(ui.Button):
+
+class CameraISO(ui.Value):
     x, y, w, h = (684, 32, 110, 48)
+    button_w = 32
+    text = "ISO"
+
+    def __init__(self, *a, **kw):
+        ui.Value.__init__(self, *a, **kw)
+        self.camera = self.app.cam.camera
+        self.iso_value = self.camera.iso
+        self.iso_list = ['AUTO', 100, 200, 320, 400, 500, 640, 800]
+        if self.iso_value in self.iso_list:
+            self.value = self.iso_list[self.iso_value]
+        else:
+            self.value = 'AUTO'
+
+    def action(self):
+        if self.button == 1:
+            if self.iso_value < len(self.iso_list) - 1:
+                self.iso_value += 1
+        else:
+            if self.iso_value > 0:
+                self.iso_value -= 1
+
+        self.value = self.iso_list[self.iso_value]
+        if self.iso_value > 0:
+            self.camera.iso = self.iso_list[self.iso_value]
+        else:
+            self.camera.iso = 0
+
+
+class CameraMeter(ui.Value):
+    x, y, w, h = (684, 84, 110, 48)
+    button_w = 32
+    text = "Meter"
+
+    def __init__(self, *a, **kw):
+        ui.Value.__init__(self, *a, **kw)
+        self.camera = self.app.cam.camera
+        self.l_value = 0
+        self.value_list = ['Average', 'Spot', 'Backlit', 'Matrix']
+        self.value = self.value_list[self.l_value]
+
+    def action(self):
+        if self.button == 1:
+            if self.l_value < len(self.value_list) - 1:
+                self.l_value += 1
+        else:
+            if self.l_value > 0:
+                self.l_value -= 1
+
+        self.value = self.value_list[self.l_value]
+        self.camera.meter_mode = self.value_list[self.l_value].lower()
+
+
+class CameraSharpness(ui.Value):
+    x, y, w, h = (684, 136, 110, 48)
+    button_w = 32
+    text = "Sharp"
+
+    def __init__(self, *a, **kw):
+        ui.Value.__init__(self, *a, **kw)
+        self.camera = self.app.cam.camera
+
+    def action(self):
+        if self.button == 1:
+            if self.value < 100:
+                self.value += 1
+        else:
+            if self.value > -100:
+                self.value -= 1
+
+        self.camera.sharpness = self.value
+
+
+class CameraStab(ui.Button):
+    x, y, w, h = (684, 188, 110, 48)
+    text = "Stabilize"
+
+    def __init__(self, *a, **kw):
+        ui.Button.__init__(self, *a, **kw)
+        self.camera = self.app.cam.camera
+        self.fill = (0, 0, 0)
+
+    def action(self):
+        if self.camera.video_stabilization:
+            self.camera.video_stabilization = False
+            self.fill = (0, 0, 0)
+        else:
+            self.camera.video_stabilization = True
+            self.fill = (64, 64, 64)
+
+
+class CameraMode(ui.Value):
+    x, y, w, h = (684, 240, 110, 48)
+    button_w = 32
+    text = "Mode"
+
+    def __init__(self, *a, **kw):
+        ui.Value.__init__(self, *a, **kw)
+        self.camera = self.app.cam.camera
+
+        self.modes = [
+            ('12MP', (4056, 3040)),
+            ('4K', (4056, 2288)),
+            ('3MP', (2028, 1520)),
+            ('1080p', (2028, 1128))
+        ]
+        self.sel_mode = 0
+        self.value = '12Mp'
+
+    def action(self):
+        if self.button == 1:
+            if self.sel_mode < 3:
+                self.sel_mode += 1
+        else:
+            if self.sel_mode > 0:
+                self.sel_mode -= 1
+
+        self.value = self.modes[self.sel_mode][0]
+        self.camera.resolution = self.modes[self.sel_mode][1]
+        self.app.cam.set_zoom()
+
+
+class CameraSave(ui.Button):
+    x, y, w, h = (684, 292, 110, 48)
     text = "Save"
 
     def action(self):
         self.app.cam.save()
 
+
 class CameraBack(ui.Button):
-    x, y, w, h = (684, 84, 110, 48)
+    x, y, w, h = (684, 344, 110, 48)
     text = "Back"
 
     def action(self):
@@ -187,45 +334,45 @@ class App(object):
 
         self.special = False
 
-        self.button_font = pygame.font.SysFont("DejaVuSans", 12)
+        self.widget_font = pygame.font.SysFont("DejaVuSans", 12)
 
-        self.lamp_color = [128, 128, 128]
+        self.lamp_color = [254, 254, 174]
 
         self.widgets = {
             'menu': [
-                MenuGroup(self.button_font),
-                MenuZoom(self, self.button_font),
-                MenuLamp(self, self.button_font),
-                MenuCamera(self, self.button_font)
+                MenuGroup(self),
+                MenuZoom(self),
+                MenuLamp(self),
+                MenuCamera(self)
             ],
             'zoom': [
-                ZoomGroup(self.button_font),
-                ZoomIn(self, self.button_font),
-                ZoomOut(self, self.button_font),
-                ZoomBack(self, self.button_font),
+                ZoomGroup(self),
+                ZoomIn(self),
+                ZoomOut(self),
+                ZoomBack(self),
             ],
             'lamp': [
-                LampGroup(self.button_font),
-                LampOn(self, self.button_font),
-                LampOff(self, self.button_font),
+                LampGroup(self),
+                LampOn(self),
+                LampOff(self),
 
-                LampBrightDown(self, self.button_font),
-                LampBrightUp(self, self.button_font),
+                LampBright(self, 50),
 
-                LampRInc(self, self.button_font),
-                LampGInc(self, self.button_font),
-                LampBInc(self, self.button_font),
+                LampR(self, self.lamp_color[0]),
+                LampG(self, self.lamp_color[1]),
+                LampB(self, self.lamp_color[2]),
 
-                LampRDec(self, self.button_font),
-                LampGDec(self, self.button_font),
-                LampBDec(self, self.button_font),
-
-                LampBack(self, self.button_font)
+                LampBack(self)
             ],
             'camera': [
-                CameraGroup(self.button_font),
-                CameraSave(self, self.button_font),
-                CameraBack(self, self.button_font)
+                CameraGroup(self),
+                CameraISO(self),
+                CameraMeter(self),
+                CameraSharpness(self),
+                CameraStab(self),
+                CameraMode(self),
+                CameraSave(self),
+                CameraBack(self)
             ]
         }
 

@@ -19,7 +19,8 @@ class Lamp(object):
         else:
             self.serial = None
 
-        self.brightness = 20
+        self.brightness = 50
+        self.send_command(CMD_BRIGHTNESS, self.brightness)
 
     def send_command(self, command, *args):
         self.serial.write(bytes("%s.%s\n" % (command, '.'.join([str(i) for i in args])), 'ascii'))
@@ -31,18 +32,10 @@ class Lamp(object):
         self.send_command(CMD_CLEAR)
 
     def on(self):
-        self.send_command(CMD_FILL, 254, 254, 254)
+        self.send_command(CMD_FILL, 254, 254, 174)
 
     def fill(self, r, g, b):
         self.send_command(CMD_FILL, r, g, b)
-
-    def fillHSV(self, h, s, v):
-        r, g, b = colorsys.hsv_to_rgb(h, s, v)
-        self.send_command(CMD_FILL, int(r*254), int(g*254), int(b*254))
-
-    def pushHSV(self, h, s, v):
-        r, g, b = colorsys.hsv_to_rgb(h, s, v)
-        self.send_command(CMD_PUSH_PIXEL, int(r*254), int(g*254), int(b*254))
 
     def setBrightness(self, value):
         self.brightness = value
